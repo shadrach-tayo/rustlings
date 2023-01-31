@@ -3,9 +3,15 @@
 
 // Execute `rustlings hint generics1` or use the `hint` watch subcommand for a hint.
 
-// I AM NOT DONE
+#[derive(Debug)]
+enum GenericVar<'a> {
+    Int(u32),
+    Str(&'a str),
+    Bool(bool),
+    Byte(u8),
+}
 
 fn main() {
-    let mut shopping_list: Vec<?> = Vec::new();
-    shopping_list.push("milk");
+    let mut shopping_list: Vec<GenericVar> = Vec::new();
+    shopping_list.push(GenericVar::Str("milk"));
 }
