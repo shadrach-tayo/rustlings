@@ -23,7 +23,6 @@ enum IntoColorError {
     IntConversion,
 }
 
-// I AM NOT DONE
 
 // Your task is to complete this implementation
 // and return an Ok result of inner type Color.
@@ -38,6 +37,28 @@ enum IntoColorError {
 impl TryFrom<(i16, i16, i16)> for Color {
     type Error = IntoColorError;
     fn try_from(tuple: (i16, i16, i16)) -> Result<Self, Self::Error> {
+        // let (red, green, blue) = tuple;
+        
+        let red = match tuple.0 {
+            0..=255 => tuple.0,
+            _ => return  Err(IntoColorError::IntConversion),
+        };
+        
+        let green = match tuple.1 {
+            0..=255 => tuple.1,
+            _ => return  Err(IntoColorError::IntConversion),
+        };
+        
+        let blue = match tuple.2 {
+            0..=255 => tuple.2,
+            _ => return  Err(IntoColorError::IntConversion),
+        };
+
+        return Ok(Color {
+            red: red as u8,
+            green: green as u8,
+            blue: blue as u8,
+        });
     }
 }
 
@@ -45,6 +66,40 @@ impl TryFrom<(i16, i16, i16)> for Color {
 impl TryFrom<[i16; 3]> for Color {
     type Error = IntoColorError;
     fn try_from(arr: [i16; 3]) -> Result<Self, Self::Error> {
+        if arr.len() != 3 {
+            return Err(IntoColorError::BadLen);
+        }
+        let mut input = arr.into_iter();
+
+        let red = match input.next() {
+            Some(i) => match i {
+                0..=255 => *i as u8,
+                _ => return  Err(IntoColorError::IntConversion),
+            },
+            _ =>  return  Err(IntoColorError::IntConversion),
+        };
+        
+        let green = match input.next() {
+            Some(i) => match i {
+                0..=255 => *i as u8,
+                _ => return  Err(IntoColorError::IntConversion),
+            },
+            _ =>  return  Err(IntoColorError::IntConversion),
+        };
+        
+        let blue = match input.next() {
+            Some(i) => match i {
+                0..=255 => *i as u8,
+                _ => return  Err(IntoColorError::IntConversion),
+            },
+            _ =>  return  Err(IntoColorError::IntConversion),
+        };        
+
+        return Ok(Color {
+            red: red,
+            green: green,
+            blue: blue,
+        });
     }
 }
 
@@ -52,6 +107,43 @@ impl TryFrom<[i16; 3]> for Color {
 impl TryFrom<&[i16]> for Color {
     type Error = IntoColorError;
     fn try_from(slice: &[i16]) -> Result<Self, Self::Error> {
+        let mut input = slice.to_owned();
+
+        if input.len() != 3 {
+            return Err(IntoColorError::BadLen);
+        }
+
+        let mut input = input.iter_mut();
+
+        let red = match input.next() {
+            Some(i) => match i {
+                0..=255 => *i as u8,
+                _ => return  Err(IntoColorError::IntConversion),
+            },
+            _ =>  return  Err(IntoColorError::IntConversion),
+        };
+        
+        let green = match input.next() {
+            Some(i) => match i {
+                0..=255 => *i as u8,
+                _ => return  Err(IntoColorError::IntConversion),
+            },
+            _ =>  return  Err(IntoColorError::IntConversion),
+        };
+        
+        let blue = match input.next() {
+            Some(i) => match i {
+                0..=255 => *i as u8,
+                _ => return  Err(IntoColorError::IntConversion),
+            },
+            _ =>  return  Err(IntoColorError::IntConversion),
+        };
+
+        return Ok(Color {
+            red: red,
+            green: green,
+            blue: blue,
+        });
     }
 }
 

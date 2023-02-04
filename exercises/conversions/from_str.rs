@@ -6,9 +6,8 @@
 // You can read more about it at https://doc.rust-lang.org/std/str/trait.FromStr.html
 // Execute `rustlings hint from_str` or use the `hint` watch subcommand for a hint.
 
-use std::num::ParseIntError;
+use std::num::{ParseIntError, IntErrorKind};
 use std::str::FromStr;
-
 #[derive(Debug, PartialEq)]
 struct Person {
     name: String,
@@ -28,7 +27,6 @@ enum ParsePersonError {
     ParseInt(ParseIntError),
 }
 
-// I AM NOT DONE
 
 // Steps:
 // 1. If the length of the provided string is 0, an error should be returned
@@ -46,6 +44,33 @@ enum ParsePersonError {
 impl FromStr for Person {
     type Err = ParsePersonError;
     fn from_str(s: &str) -> Result<Person, Self::Err> {
+        if s.is_empty() {
+            return Err(ParsePersonError::Empty);
+        }
+        
+        let mut params = s.split(",").into_iter();
+        
+        let name = match params.next() {
+            Some(n) => String::from(n),
+            None => return Err(ParsePersonError::NoName),
+        };
+
+        if name.is_empty() {
+            return Err(ParsePersonError::NoName);
+        }
+
+        let age = match params.next() {
+            Some(n) => match n.parse::<usize>() {
+                Ok(r) => r,
+                Err(err) => return Err(ParsePersonError::ParseInt(err)),
+            },
+            None => return Err(ParsePersonError::BadLen),
+        };
+
+        match params.next() {
+            Some(_) => Err(ParsePersonError::BadLen),
+            None => Ok(Person { name, age }),
+        }
     }
 }
 
@@ -98,6 +123,7 @@ mod tests {
 
     #[test]
     fn missing_name_and_age() {
+        println!("Result {:?}", ",".parse::<Person>());
         assert!(matches!(
             ",".parse::<Person>(),
             Err(ParsePersonError::NoName | ParsePersonError::ParseInt(_))
